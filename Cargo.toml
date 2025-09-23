@@ -5,3 +5,4 @@ edition = "2024"
 
 [dependencies]
 sdl2="0.34.3"
+rand = "0.8"

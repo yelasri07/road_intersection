@@ -4,7 +4,9 @@ use sdl2::pixels::Color;
 use std::time::Duration;
 
 mod roads;
+mod car;
 
+use crate::car::*;
 use crate::roads::*;
 const WIDTH: i32 = 900;
 const HEIGHT: i32 = 700;
@@ -12,14 +14,15 @@ const HEIGHT: i32 = 700;
 pub fn main() {
     let sdl_context = sdl2::init().unwrap();
     let video_subsystem = sdl_context.video().unwrap();
-
+    
     let window = video_subsystem
-        .window("road_intersection", WIDTH as u32, HEIGHT as u32)
-        .position_centered()
-        .build()
-        .unwrap();
+    .window("road_intersection", WIDTH as u32, HEIGHT as u32)
+    .position_centered()
+    .build()
+    .unwrap();
 
     let mut canvas = window.into_canvas().build().unwrap();
+    let mut cars: Vec<Car> = Vec::new();
 
     canvas.set_draw_color(Color::BLACK);
     canvas.clear();
@@ -33,13 +36,35 @@ pub fn main() {
                     keycode: Some(Keycode::Escape),
                     ..
                 } => break 'running,
+                Event::KeyDown { keycode: Some(key), .. } => {
+                    let x = (WIDTH / 2) as i32;
+                    let y = (HEIGHT /2) as i32;
+
+                    match key {
+                        Keycode::Up => {
+                            cars.push(Car::new(x - 50, 0, Direction::North));
+                        }
+                        Keycode::Down => {
+                            cars.push(Car::new(x, HEIGHT - 50, Direction::South));
+                        }
+                        Keycode::Left => {
+                            cars.push(Car::new(0, y - 50, Direction::East));
+                        }
+                        Keycode::Right => {
+                            cars.push(Car::new(WIDTH - 50, y, Direction::West));
+                        }
+                        Keycode::R => {
+                            
+                        }
+                        _ => {}
+                }    }
                 _ => {}
             }
         }
 
         draw_roads(&mut canvas);
 
-        
+
 
         canvas.present();
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
