@@ -37,14 +37,13 @@ pub fn main() {
                     ..
                 } => break 'running,
                 Event::KeyDown { keycode: Some(key), .. } => {
-                    let x = (WIDTH / 2) as i32;
-                    let y = (HEIGHT /2) as i32;
+                    let (x, y, width, height) = get_road_positions();
 
                     match key {
                         Keycode::Up => cars.push(Car::new(x - 50, 0, Direction::North)),
-                        Keycode::Down => cars.push(Car::new(x, HEIGHT - 50, Direction::South)),
+                        Keycode::Down => cars.push(Car::new(x, height - 50, Direction::South)),
                         Keycode::Left => cars.push(Car::new(0, y, Direction::East)),
-                        Keycode::Right => cars.push(Car::new(WIDTH - 50, y - 50, Direction::West)),
+                        Keycode::Right => cars.push(Car::new(width - 50, y - 50, Direction::West)),
                         Keycode::R => cars.push(Car::new_with_rand_dir()),
                         _ => {}
                 }    }
@@ -52,9 +51,13 @@ pub fn main() {
             }
         }
 
+        canvas.set_draw_color(Color::BLACK);
+        canvas.clear();
+
         draw_roads(&mut canvas);
 
-        for car in cars.iter() {
+        for car in cars.iter_mut() {
+            car.update_position();
             canvas.set_draw_color(car.color);   
             canvas.fill_rect(car.rect()).unwrap();
         }
