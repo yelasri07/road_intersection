@@ -41,21 +41,11 @@ pub fn main() {
                     let y = (HEIGHT /2) as i32;
 
                     match key {
-                        Keycode::Up => {
-                            cars.push(Car::new(x - 50, 0, Direction::North));
-                        }
-                        Keycode::Down => {
-                            cars.push(Car::new(x, HEIGHT - 50, Direction::South));
-                        }
-                        Keycode::Left => {
-                            cars.push(Car::new(0, y - 50, Direction::East));
-                        }
-                        Keycode::Right => {
-                            cars.push(Car::new(WIDTH - 50, y, Direction::West));
-                        }
-                        Keycode::R => {
-                            
-                        }
+                        Keycode::Up => cars.push(Car::new(x - 50, 0, Direction::North)),
+                        Keycode::Down => cars.push(Car::new(x, HEIGHT - 50, Direction::South)),
+                        Keycode::Left => cars.push(Car::new(0, y, Direction::East)),
+                        Keycode::Right => cars.push(Car::new(WIDTH - 50, y - 50, Direction::West)),
+                        Keycode::R => cars.push(Car::new_with_rand_dir()),
                         _ => {}
                 }    }
                 _ => {}
@@ -64,7 +54,10 @@ pub fn main() {
 
         draw_roads(&mut canvas);
 
-
+        for car in cars.iter() {
+            canvas.set_draw_color(car.color);   
+            canvas.fill_rect(car.rect()).unwrap();
+        }
 
         canvas.present();
         ::std::thread::sleep(Duration::new(0, 1_000_000_000u32 / 60));
