@@ -68,9 +68,8 @@ impl Car {
         None
     }
 
-    // Check if a position is safe from existing cars
     fn is_position_safe(x: i32, y: i32, direction: Direction, existing_cars: &[Car]) -> bool {
-        let safety_distance = 70; // Minimum distance from other cars
+        let safety_distance = 70;
 
         for car in existing_cars {
             match direction {
