@@ -32,19 +32,16 @@ impl Light {
             }
         }
 
-        if self.id == green_light && Light::is_empty_center(cars) {
+        if self.id == green_light {
             self.color = Color::GREEN;
             self.status = true
         } else {
             self.color = Color::RED;
             self.status = false
         }
-
-        canvas.set_draw_color(self.color);
-        canvas.fill_rect(Rect::new(self.x, self.y,50, 50)).unwrap()
     }
 
-    fn is_empty_center(cars: &[Car]) -> bool {
+    pub fn is_empty_center(cars: &[Car]) -> bool {
         let (x, y, _, _) = get_road_positions();
 
         let top = y - 50;

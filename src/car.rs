@@ -121,7 +121,7 @@ impl Car {
         capacity: &mut HashMap<&str, u32>,
     ) {
 
-        let speed = 2;
+        let speed = 5;
         let (x, y, _, _) = get_road_positions();
 
         match self.direction {
