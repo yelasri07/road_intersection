@@ -41,24 +41,26 @@ pub fn main() {
 
                     match key {
                         Keycode::Up => {
-                            if let Some(new_car) = Car::new(x - 50, 0, Direction::North, &cars) {
-                                cars.push(new_car);
-                            }
-                        }
-                        Keycode::Down => {
                             if let Some(new_car) = Car::new(x, height - 50, Direction::South, &cars) {
                                 cars.push(new_car);
                             }
                         }
+                        Keycode::Down => {
+                            
+                            if let Some(new_car) = Car::new(x - 50, 0, Direction::North, &cars) {
+                                cars.push(new_car);
+                            }
+                        }
                         Keycode::Left => {
-                            if let Some(new_car) = Car::new(0, y, Direction::East, &cars) {
+                            if let Some(new_car) = Car::new(width - 50, y - 50, Direction::West, &cars) {
                                 cars.push(new_car);
                             }
                         }
                         Keycode::Right => {
-                            if let Some(new_car) = Car::new(width - 50, y - 50, Direction::West, &cars) {
+                            if let Some(new_car) = Car::new(0, y, Direction::East, &cars) {
                                 cars.push(new_car);
                             }
+                       
                         }
                         Keycode::R => {
                             if let Some(new_car) = Car::new_with_rand_dir(&cars) {
