@@ -113,7 +113,7 @@ pub fn main() {
 
         let copy_cars: Vec<Car> = cars.clone();
         for car in cars.iter_mut() {
-            car.update_position(&mut lights, &copy_cars);
+            car.update_position(&mut lights, &copy_cars, &mut capacity);
             canvas.set_draw_color(car.color);
             canvas.fill_rect(car.rect()).unwrap();
         }

@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use rand::Rng;
 use sdl2::{pixels::Color, rect::Rect};
 
@@ -27,6 +29,7 @@ pub struct Car {
     pub route: Route,
     pub color: Color,
     pub state: bool,
+    pub out_calc: bool,
 }
 
 impl Car {
@@ -50,6 +53,7 @@ impl Car {
             route: route,
             color: color,
             state: true,
+            out_calc: false,
         })
     }
 
@@ -106,7 +110,14 @@ impl Car {
         Rect::new(self.x, self.y, 50, 50)
     }
 
-    pub fn update_position(&mut self, lights: &mut [Light], cars: &[Car]) {
+    pub fn update_position(
+        &mut self,
+        lights: &mut [Light],
+        cars: &[Car],
+        capacity: &mut HashMap<&str, u32>,
+    ) {
+        println!("{:?}", capacity);
+
         let speed = 2;
         let (x, y, _, _) = get_road_positions();
 
@@ -114,6 +125,14 @@ impl Car {
             Direction::East => {
                 if self.x > x - 100 {
                     self.state = false;
+                    if !self.out_calc {
+                        if let Some(value) = capacity.get_mut("East") {
+                            if *value > 0 {
+                                *value -= 1;
+                            }
+                            self.out_calc = true
+                        }
+                    }
                 }
 
                 if ((!lights[1].status && self.x == x - 100) || !self.is_can_move(cars))
@@ -134,9 +153,17 @@ impl Car {
             Direction::West => {
                 if self.x < x + 50 {
                     self.state = false;
+                    if !self.out_calc {
+                        if let Some(value) = capacity.get_mut("West") {
+                            if *value > 0 {
+                                *value -= 1;
+                            }
+                            self.out_calc = true
+                        }
+                    }
                 }
 
-                if ((!lights[3].status && self.x == x + 50) || !self.is_can_move(cars))
+                if ((!lights[2].status && self.x == x + 50) || !self.is_can_move(cars))
                     && self.state
                 {
                     return;
@@ -153,7 +180,14 @@ impl Car {
             }
             Direction::North => {
                 if self.y > y - 100 {
-                    self.state = false;
+                    if !self.out_calc {
+                        if let Some(value) = capacity.get_mut("North") {
+                            if *value > 0 {
+                                *value -= 1;
+                            }
+                            self.out_calc = true
+                        }
+                    }
                 }
 
                 if ((!lights[0].status && self.y == y - 100) || !self.is_can_move(cars))
@@ -174,9 +208,17 @@ impl Car {
             Direction::South => {
                 if self.y < y + 50 {
                     self.state = false;
+                    if !self.out_calc {
+                        if let Some(value) = capacity.get_mut("South") {
+                            if *value > 0 {
+                                *value -= 1;
+                            }
+                            self.out_calc = true
+                        }
+                    }
                 }
 
-                if ((!lights[2].status && self.y == y + 50) || !self.is_can_move(cars))
+                if ((!lights[3].status && self.y == y + 50) || !self.is_can_move(cars))
                     && self.state
                 {
                     return;

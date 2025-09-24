@@ -16,7 +16,7 @@ impl Light {
     }
 
     pub fn draw_traffic_light(&mut self, canvas: &mut Canvas<Window>, capacity: &HashMap<&str, u32>){
-        let mut green_light: u32 = 1;
+        let mut green_light: u32 = 0;
         let mut max_cars: u32 = 0;
         for (key, value) in capacity {
             if *value > max_cars {
