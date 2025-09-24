@@ -78,7 +78,8 @@ impl Car {
     }
 
     fn is_position_safe(x: i32, y: i32, direction: Direction, existing_cars: &[Car]) -> bool {
-        let safety_distance = 70;
+        // let safety_distance = 70;
+        let safety_distance = 100;
 
         for car in existing_cars {
             match direction {
@@ -239,7 +240,9 @@ impl Car {
     }
 
     fn is_can_move(&self, cars: &[Car]) -> bool {
-        let safety_distance = 70;
+        // let safety_distance = 70;
+        let safety_distance = 100;
+
 
         for car in cars.iter() {
             match self.direction {
