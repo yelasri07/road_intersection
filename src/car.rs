@@ -94,34 +94,11 @@ impl Car {
                         return false;
                     }
                 }
-                // Also check for cars in intersecting paths
-                _ => {
-                    let car_rect = Rect::new(car.x, car.y, 50, 50);
-                    let new_car_rect = Rect::new(x, y, 50, 50);
-                    if car_rect.has_intersection(new_car_rect) {
-                        return false;
-                    }
-
-                    // Check safety zone in front of the new car
-                    let safety_zone = Car::get_safety_zone(x, y, direction, safety_distance);
-                    if car_rect.has_intersection(safety_zone) {
-                        return false;
-                    }
-                }
+                _ => {}
             }
         }
 
         true
-    }
-
-    // Get the safety zone in front of a car position
-    fn get_safety_zone(x: i32, y: i32, direction: Direction, distance: i32) -> Rect {
-        match direction {
-            Direction::East => Rect::new(x + 50, y, distance as u32, 50),
-            Direction::West => Rect::new(x - distance, y, distance as u32, 50),
-            Direction::North => Rect::new(x, y + 50, 50, distance as u32),
-            Direction::South => Rect::new(x, y - distance, 50, distance as u32),
-        }
     }
 
     pub fn rect(&self) -> Rect {
