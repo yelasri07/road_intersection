@@ -23,9 +23,16 @@ pub fn main() {
     .build()
     .unwrap();
 
+    let (x, y, width, height) = get_road_positions();
     let mut canvas = window.into_canvas().build().unwrap();
     let mut cars: Vec<Car> = Vec::new();
     let mut lights: Vec<Light> = Vec::new();
+
+    lights.push(Light::new(x - 100, y - 100, Color::RED));
+    lights.push(Light::new(x-100, y + 50, Color::RED));
+    lights.push(Light::new(x+50, y - 100, Color::RED));
+    lights.push(Light::new(x+50, y +50, Color::RED));
+
 
     canvas.set_draw_color(Color::BLACK);
     canvas.clear();
@@ -81,6 +88,10 @@ pub fn main() {
         canvas.clear();
 
         draw_roads(&mut canvas);
+
+        for l in lights.iter() {
+            l.draw_traffic_light(&mut canvas);
+        }
 
         for car in cars.iter_mut() {
             car.update_position();
