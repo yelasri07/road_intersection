@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use sdl2::{pixels::Color, rect::Rect, render::Canvas, video::Window};
 
+use crate::{car::Car, roads::get_road_positions};
+
 pub struct Light {
     pub id: u32,
     pub x: i32,
@@ -40,5 +42,20 @@ impl Light {
 
         canvas.set_draw_color(self.color);
         canvas.fill_rect(Rect::new(self.x, self.y,50, 50)).unwrap()
+    }
+
+    fn is_empty_center(cars: &[Car]) -> bool {
+        let (x, y, _, _) = get_road_positions();
+
+        let top = y - 50;
+        let bottom = y + 50;
+        let left = x - 50;
+        let right = x + 50;
+
+        for car in cars {
+            
+        }
+
+        true
     }
 }

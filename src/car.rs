@@ -116,7 +116,6 @@ impl Car {
         cars: &[Car],
         capacity: &mut HashMap<&str, u32>,
     ) {
-        println!("{:?}", capacity);
 
         let speed = 2;
         let (x, y, _, _) = get_road_positions();
