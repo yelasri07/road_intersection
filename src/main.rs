@@ -1,6 +1,7 @@
 use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
+use std::collections::HashMap;
 use std::time::Duration;
 
 mod roads;
@@ -27,11 +28,16 @@ pub fn main() {
     let mut canvas = window.into_canvas().build().unwrap();
     let mut cars: Vec<Car> = Vec::new();
     let mut lights: Vec<Light> = Vec::new();
+    let mut capacity: HashMap<&str, u32> = HashMap::new();
+    capacity.insert("North", 0);
+    capacity.insert("South", 0);
+    capacity.insert("East", 0);
+    capacity.insert("West", 0);
 
-    lights.push(Light::new(x - 100, y - 100, Color::RED));
-    lights.push(Light::new(x-100, y + 50, Color::RED));
-    lights.push(Light::new(x+50, y - 100, Color::RED));
-    lights.push(Light::new(x+50, y +50, Color::RED));
+    lights.push(Light::new(x - 100, y - 100, Color::RED, 1));
+    lights.push(Light::new(x-100, y + 50, Color::RED, 2));
+    lights.push(Light::new(x+50, y - 100, Color::RED, 3));
+    lights.push(Light::new(x+50, y +50, Color::RED, 4));
 
 
     canvas.set_draw_color(Color::BLACK);
@@ -53,22 +59,34 @@ pub fn main() {
                         Keycode::Up => {
                             if let Some(new_car) = Car::new(x, height - 50, Direction::South, &cars) {
                                 cars.push(new_car);
+                                if let Some(value) = capacity.get_mut("South") {
+                                    *value += 1;
+                                } 
                             }
                         }
                         Keycode::Down => {
                             
                             if let Some(new_car) = Car::new(x - 50, 0, Direction::North, &cars) {
                                 cars.push(new_car);
+                                if let Some(value) = capacity.get_mut("North") {
+                                    *value += 1;
+                                } 
                             }
                         }
                         Keycode::Left => {
                             if let Some(new_car) = Car::new(width - 50, y - 50, Direction::West, &cars) {
                                 cars.push(new_car);
+                                if let Some(value) = capacity.get_mut("West") {
+                                    *value += 1;
+                                } 
                             }
                         }
                         Keycode::Right => {
                             if let Some(new_car) = Car::new(0, y, Direction::East, &cars) {
                                 cars.push(new_car);
+                                if let Some(value) = capacity.get_mut("East") {
+                                    *value += 1;
+                                } 
                             }
                        
                         }
@@ -89,8 +107,8 @@ pub fn main() {
 
         draw_roads(&mut canvas);
 
-        for l in lights.iter() {
-            l.draw_traffic_light(&mut canvas);
+        for l in lights.iter_mut() {
+            l.draw_traffic_light(&mut canvas, &capacity);
         }
 
         let copy_cars: Vec<Car> = cars.clone();
