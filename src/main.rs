@@ -40,13 +40,34 @@ pub fn main() {
                     let (x, y, width, height) = get_road_positions();
 
                     match key {
-                        Keycode::Up => cars.push(Car::new(x - 50, 0, Direction::North)),
-                        Keycode::Down => cars.push(Car::new(x, height - 50, Direction::South)),
-                        Keycode::Left => cars.push(Car::new(0, y, Direction::East)),
-                        Keycode::Right => cars.push(Car::new(width - 50, y - 50, Direction::West)),
-                        Keycode::R => cars.push(Car::new_with_rand_dir()),
+                        Keycode::Up => {
+                            if let Some(new_car) = Car::new(x - 50, 0, Direction::North, &cars) {
+                                cars.push(new_car);
+                            }
+                        }
+                        Keycode::Down => {
+                            if let Some(new_car) = Car::new(x, height - 50, Direction::South, &cars) {
+                                cars.push(new_car);
+                            }
+                        }
+                        Keycode::Left => {
+                            if let Some(new_car) = Car::new(0, y, Direction::East, &cars) {
+                                cars.push(new_car);
+                            }
+                        }
+                        Keycode::Right => {
+                            if let Some(new_car) = Car::new(width - 50, y - 50, Direction::West, &cars) {
+                                cars.push(new_car);
+                            }
+                        }
+                        Keycode::R => {
+                            if let Some(new_car) = Car::new_with_rand_dir(&cars) {
+                                cars.push(new_car);
+                            }
+                        }
                         _ => {}
-                }    }
+                    }
+                }
                 _ => {}
             }
         }
@@ -56,9 +77,14 @@ pub fn main() {
 
         draw_roads(&mut canvas);
 
+        // Update car positions (no safety checks needed here anymore)
         for car in cars.iter_mut() {
             car.update_position();
-            canvas.set_draw_color(car.color);   
+        }
+
+        // Draw all cars
+        for car in cars.iter() {
+            canvas.set_draw_color(car.color);
             canvas.fill_rect(car.rect()).unwrap();
         }
 
