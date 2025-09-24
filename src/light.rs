@@ -1,8 +1,8 @@
-use std::collections::HashMap;
+use std::{collections::HashMap};
 
 use sdl2::{pixels::Color, rect::Rect, render::Canvas, video::Window};
 
-use crate::{car::Car, roads::get_road_positions};
+use crate::{car::{Car}, roads::get_road_positions};
 
 pub struct Light {
     pub id: u32,
@@ -17,7 +17,7 @@ impl Light {
         Light { id: id ,x: x, y: y, color: color, status: false }
     }
 
-    pub fn draw_traffic_light(&mut self, canvas: &mut Canvas<Window>, capacity: &HashMap<&str, u32>){
+    pub fn draw_traffic_light(&mut self, canvas: &mut Canvas<Window>, capacity: &HashMap<&str, u32>, cars: &[Car]){
         let mut green_light: u32 = 0;
         let mut max_cars: u32 = 0;
         for (key, value) in capacity {
@@ -32,7 +32,7 @@ impl Light {
             }
         }
 
-        if self.id == green_light {
+        if self.id == green_light && Light::is_empty_center(cars) {
             self.color = Color::GREEN;
             self.status = true
         } else {
@@ -53,7 +53,9 @@ impl Light {
         let right = x + 50;
 
         for car in cars {
-            
+            if car.x + 50 > left && car.x < right && car.y + 50 > top && car.y < bottom {
+                return false;
+            }
         }
 
         true

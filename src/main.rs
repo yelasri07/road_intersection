@@ -29,6 +29,7 @@ pub fn main() {
     let mut cars: Vec<Car> = Vec::new();
     let mut lights: Vec<Light> = Vec::new();
     let mut capacity: HashMap<&str, u32> = HashMap::new();
+
     capacity.insert("North", 0);
     capacity.insert("South", 0);
     capacity.insert("East", 0);
@@ -38,7 +39,6 @@ pub fn main() {
     lights.push(Light::new(x-100, y + 50, Color::RED, 2));
     lights.push(Light::new(x+50, y - 100, Color::RED, 3));
     lights.push(Light::new(x+50, y +50, Color::RED, 4));
-
 
     canvas.set_draw_color(Color::BLACK);
     canvas.clear();
@@ -108,7 +108,7 @@ pub fn main() {
         draw_roads(&mut canvas);
 
         for l in lights.iter_mut() {
-            l.draw_traffic_light(&mut canvas, &capacity);
+            l.draw_traffic_light(&mut canvas, &capacity, &cars);
         }
 
         let copy_cars: Vec<Car> = cars.clone();
