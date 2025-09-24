@@ -5,8 +5,10 @@ use std::time::Duration;
 
 mod roads;
 mod car;
+mod light;
 
 use crate::car::*;
+use crate::light::*;
 use crate::roads::*;
 const WIDTH: i32 = 900;
 const HEIGHT: i32 = 700;
@@ -23,6 +25,7 @@ pub fn main() {
 
     let mut canvas = window.into_canvas().build().unwrap();
     let mut cars: Vec<Car> = Vec::new();
+    let mut lights: Vec<Light> = Vec::new();
 
     canvas.set_draw_color(Color::BLACK);
     canvas.clear();

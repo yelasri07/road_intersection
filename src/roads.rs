@@ -1,11 +1,11 @@
-use sdl2::{pixels::Color, rect::Point, render::Canvas, video::Window};
+use sdl2::{pixels::Color, rect::{Point, Rect}, render::Canvas, video::Window};
 
 use crate::{HEIGHT, WIDTH};
 
 pub fn draw_roads(canvas: &mut Canvas<Window>) {
     let (x, y, width, height) = get_road_positions();
 
-    canvas.set_draw_color(Color::WHITE);
+   canvas.set_draw_color(Color::WHITE);
 
     canvas.draw_line(Point::new(x, 0), Point::new(x, height)).unwrap();
     canvas.draw_line(Point::new(x + 50, 0), Point::new(x + 50, height)).unwrap();
