@@ -77,13 +77,8 @@ pub fn main() {
 
         draw_roads(&mut canvas);
 
-        // Update car positions (no safety checks needed here anymore)
         for car in cars.iter_mut() {
             car.update_position();
-        }
-
-        // Draw all cars
-        for car in cars.iter() {
             canvas.set_draw_color(car.color);
             canvas.fill_rect(car.rect()).unwrap();
         }

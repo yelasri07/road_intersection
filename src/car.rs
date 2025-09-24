@@ -30,7 +30,6 @@ pub struct Car {
 
 impl Car {
     pub fn new(x: i32, y: i32, direction: Direction, existing_cars: &[Car]) -> Option<Car> {
-        // Check if this position is safe from existing cars
         if !Car::is_position_safe(x, y, direction, existing_cars) {
             return None;
         }
@@ -54,36 +53,28 @@ impl Car {
 
     pub fn new_with_rand_dir(existing_cars: &[Car]) -> Option<Car> {
         let (x, y, width, height) = get_road_positions();
-        // let safety_distance = 50; // Minimum distance from other cars
 
-        // Try different spawn positions until we find a safe one
-        let mut attempts = 0;
-        while attempts < 10 { // Limit attempts to prevent infinite loop
-            let (spawn_x, spawn_y, direction) = match rand::thread_rng().gen_range(1..=4) {
-                1 => (0, y, Direction::East),
-                2 => (x - 50, 0, Direction::North),
-                3 => (x, height - 50, Direction::South),
-                _ => (width - 50, y - 50, Direction::West),
-            };
+        let (spawn_x, spawn_y, direction) = match rand::thread_rng().gen_range(1..=4) {
+            1 => (0, y, Direction::East),
+            2 => (x - 50, 0, Direction::North),
+            3 => (x, height - 50, Direction::South),
+            _ => (width - 50, y - 50, Direction::West),
+        };
 
-            if Car::is_position_safe(spawn_x, spawn_y, direction, existing_cars) {
-                return Car::new(spawn_x, spawn_y, direction, existing_cars);
-            }
-            
-            attempts += 1;
+        if Car::is_position_safe(spawn_x, spawn_y, direction, existing_cars) {
+            return Car::new(spawn_x, spawn_y, direction, existing_cars);
         }
 
-        None // Could not find a safe position after several attempts
+        None
     }
 
     // Check if a position is safe from existing cars
     fn is_position_safe(x: i32, y: i32, direction: Direction, existing_cars: &[Car]) -> bool {
         let safety_distance = 70; // Minimum distance from other cars
-        
+
         for car in existing_cars {
             match direction {
                 Direction::East if car.direction == Direction::East && car.y == y => {
-                    // Check if too close to cars coming from the same direction
                     if (car.x - x).abs() < safety_distance {
                         return false;
                     }
@@ -110,7 +101,7 @@ impl Car {
                     if car_rect.has_intersection(new_car_rect) {
                         return false;
                     }
-                    
+
                     // Check safety zone in front of the new car
                     let safety_zone = Car::get_safety_zone(x, y, direction, safety_distance);
                     if car_rect.has_intersection(safety_zone) {
@@ -119,6 +110,7 @@ impl Car {
                 }
             }
         }
+
         true
     }
 
