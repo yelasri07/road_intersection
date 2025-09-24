@@ -1,6 +1,6 @@
 use std::{collections::HashMap};
 
-use sdl2::{pixels::Color, rect::Rect, render::Canvas, video::Window};
+use sdl2::{pixels::Color};
 
 use crate::{car::{Car}, roads::get_road_positions};
 
@@ -17,7 +17,7 @@ impl Light {
         Light { id: id ,x: x, y: y, color: color, status: false }
     }
 
-    pub fn draw_traffic_light(&mut self, canvas: &mut Canvas<Window>, capacity: &HashMap<&str, u32>, cars: &[Car]){
+    pub fn draw_traffic_light(&mut self, capacity: &HashMap<&str, u32>){
         let mut green_light: u32 = 0;
         let mut max_cars: u32 = 0;
         for (key, value) in capacity {

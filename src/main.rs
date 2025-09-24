@@ -2,7 +2,6 @@ use sdl2::event::Event;
 use sdl2::keyboard::Keycode;
 use sdl2::pixels::Color;
 use sdl2::rect::Rect;
-use std::cell::Cell;
 use std::collections::HashMap;
 use std::time::Duration;
 use std::time::Instant;
@@ -117,7 +116,7 @@ pub fn main() {
 
         if timer.elapsed().as_secs() >= a && Light::is_empty_center(&cars) {
             for l in lights.iter_mut() {
-                l.draw_traffic_light(&mut canvas, &capacity, &cars);
+                l.draw_traffic_light(&capacity);
             }
             
             a += 2;
@@ -125,7 +124,7 @@ pub fn main() {
         
         for l in lights.iter_mut() {
             canvas.set_draw_color(l.color);
-            canvas.fill_rect(Rect::new(l.x, l.y, 50, 50)).unwrap()
+            canvas.draw_rect(Rect::new(l.x, l.y, 50, 50)).unwrap()
         }
 
         let copy_cars: Vec<Car> = cars.clone();

@@ -40,8 +40,8 @@ impl Car {
 
         let rand_number = rand::thread_rng().gen_range(1..=3);
         let (route, color) = match rand_number {
-            1 => (Route::Left, Color::RGB(0, 255, 128)),
-            2 => (Route::Right, Color::RGB(255, 165, 0)),
+            1 => (Route::Left, Color::RGB(128, 0, 128)),
+            2 => (Route::Right, Color::RGB(255, 140, 0)),
             _ => (Route::Straight, Color::RGB(0, 191, 255)),
         };
 
@@ -57,7 +57,10 @@ impl Car {
         })
     }
 
-    pub fn new_with_rand_dir(existing_cars: &[Car], capacity: &mut HashMap<&str, u32>) -> Option<Car> {
+    pub fn new_with_rand_dir(
+        existing_cars: &[Car],
+        capacity: &mut HashMap<&str, u32>,
+    ) -> Option<Car> {
         let (x, y, width, height) = get_road_positions();
 
         let (spawn_x, spawn_y, direction, str_dir) = match rand::thread_rng().gen_range(1..=4) {
@@ -70,7 +73,7 @@ impl Car {
         if Car::is_position_safe(spawn_x, spawn_y, direction, existing_cars) {
             if let Some(value) = capacity.get_mut(str_dir) {
                 *value += 1;
-            } 
+            }
             return Car::new(spawn_x, spawn_y, direction, existing_cars);
         }
 
@@ -120,7 +123,6 @@ impl Car {
         cars: &[Car],
         capacity: &mut HashMap<&str, u32>,
     ) {
-
         let speed = 5;
         let (x, y, _, _) = get_road_positions();
 
@@ -242,7 +244,6 @@ impl Car {
     fn is_can_move(&self, cars: &[Car]) -> bool {
         // let safety_distance = 70;
         let safety_distance = 100;
-
 
         for car in cars.iter() {
             match self.direction {
