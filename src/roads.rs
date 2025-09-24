@@ -1,4 +1,4 @@
-use sdl2::{pixels::Color, rect::{Point, Rect}, render::Canvas, video::Window};
+use sdl2::{pixels::Color, rect::{Point}, render::Canvas, video::Window};
 
 use crate::{HEIGHT, WIDTH};
 

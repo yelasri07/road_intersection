@@ -20,6 +20,7 @@ pub enum Route {
 
 #[derive(Debug, Clone, Copy)]
 pub struct Car {
+    pub id: u32,
     pub x: i32,
     pub y: i32,
     pub direction: Direction,
@@ -42,6 +43,7 @@ impl Car {
         };
 
         Some(Car {
+            id: existing_cars.len() as u32 + 1,
             x: x,
             y: y,
             direction: direction,
@@ -110,12 +112,17 @@ impl Car {
 
         match self.direction {
             Direction::East => {
-                if (!lights[1].status && self.x >= x - 100) || !self.is_can_move(cars) {
+                if self.x > x - 100 {
+                    self.state = false;
+                }
+
+                if ((!lights[1].status && self.x == x - 100) || !self.is_can_move(cars))
+                    && self.state
+                {
                     return;
                 }
 
                 self.x += speed;
-
                 if self.route == Route::Left && self.x >= x {
                     self.direction = Direction::South;
                     self.route = Route::Straight;
@@ -125,6 +132,16 @@ impl Car {
                 }
             }
             Direction::West => {
+                if self.x < x + 50 {
+                    self.state = false;
+                }
+
+                if ((!lights[1].status && self.x == x + 50) || !self.is_can_move(cars))
+                    && self.state
+                {
+                    return;
+                }
+
                 self.x -= speed;
                 if self.route == Route::Left && self.x + 50 <= x {
                     self.direction = Direction::North;
@@ -135,6 +152,16 @@ impl Car {
                 }
             }
             Direction::North => {
+                if self.y > y - 100 {
+                    self.state = false;
+                }
+
+                if ((!lights[1].status && self.y == y - 100) || !self.is_can_move(cars))
+                    && self.state
+                {
+                    return;
+                }
+
                 self.y += speed;
                 if self.route == Route::Left && self.y >= y {
                     self.direction = Direction::East;
@@ -145,6 +172,16 @@ impl Car {
                 }
             }
             Direction::South => {
+                if self.y < y + 50 {
+                    self.state = false;
+                }
+
+                if ((!lights[1].status && self.y == y + 50) || !self.is_can_move(cars))
+                    && self.state
+                {
+                    return;
+                }
+
                 self.y -= speed;
                 if self.route == Route::Left && self.y + 50 <= y {
                     self.direction = Direction::West;
@@ -162,10 +199,36 @@ impl Car {
 
         for car in cars.iter() {
             match self.direction {
-                Direction::East if car.direction == Direction::East && self.x == car.x => {
-                    if (car.x - self.x).abs() < safety_distance {
-                        return false;
-                    }
+                Direction::East
+                    if self.id > car.id
+                        && car.direction == Direction::East
+                        && self.x + safety_distance >= car.x =>
+                {
+                    return false;
+                }
+
+                Direction::West
+                    if self.id > car.id
+                        && car.direction == Direction::West
+                        && self.x <= car.x + safety_distance =>
+                {
+                    return false;
+                }
+
+                Direction::North
+                    if self.id > car.id
+                        && car.direction == Direction::North
+                        && self.y + safety_distance >= car.y =>
+                {
+                    return false;
+                }
+
+                Direction::South
+                    if self.id > car.id
+                        && car.direction == Direction::South
+                        && self.y <= car.y + safety_distance =>
+                {
+                    return false;
                 }
 
                 _ => {}

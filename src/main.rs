@@ -28,10 +28,10 @@ pub fn main() {
     let mut cars: Vec<Car> = Vec::new();
     let mut lights: Vec<Light> = Vec::new();
 
-    lights.push(Light::new(x - 100, y - 100, Color::RED, 10));
-    lights.push(Light::new(x-100, y + 50, Color::RED, 100));
-    lights.push(Light::new(x+50, y - 100, Color::RED, 9));
-    lights.push(Light::new(x+50, y +50, Color::RED, 10));
+    lights.push(Light::new(x - 100, y - 100, Color::RED));
+    lights.push(Light::new(x-100, y + 50, Color::RED));
+    lights.push(Light::new(x+50, y - 100, Color::RED));
+    lights.push(Light::new(x+50, y +50, Color::RED));
 
 
     canvas.set_draw_color(Color::BLACK);
