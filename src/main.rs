@@ -23,15 +23,15 @@ pub fn main() {
     .build()
     .unwrap();
 
-    let (x, y, width, height) = get_road_positions();
+    let (x, y, _, _) = get_road_positions();
     let mut canvas = window.into_canvas().build().unwrap();
     let mut cars: Vec<Car> = Vec::new();
     let mut lights: Vec<Light> = Vec::new();
 
-    lights.push(Light::new(x - 100, y - 100, Color::RED));
-    lights.push(Light::new(x-100, y + 50, Color::RED));
-    lights.push(Light::new(x+50, y - 100, Color::RED));
-    lights.push(Light::new(x+50, y +50, Color::RED));
+    lights.push(Light::new(x - 100, y - 100, Color::RED, 10));
+    lights.push(Light::new(x-100, y + 50, Color::RED, 100));
+    lights.push(Light::new(x+50, y - 100, Color::RED, 9));
+    lights.push(Light::new(x+50, y +50, Color::RED, 10));
 
 
     canvas.set_draw_color(Color::BLACK);
@@ -93,8 +93,9 @@ pub fn main() {
             l.draw_traffic_light(&mut canvas);
         }
 
+        let copy_cars: Vec<Car> = cars.clone();
         for car in cars.iter_mut() {
-            car.update_position();
+            car.update_position(&mut lights, &copy_cars);
             canvas.set_draw_color(car.color);
             canvas.fill_rect(car.rect()).unwrap();
         }

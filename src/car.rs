@@ -1,7 +1,7 @@
 use rand::Rng;
 use sdl2::{pixels::Color, rect::Rect};
 
-use crate::roads::get_road_positions;
+use crate::{light::Light, roads::get_road_positions};
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum Direction {
@@ -11,14 +11,14 @@ pub enum Direction {
     West,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub enum Route {
     Left,
     Right,
     Straight,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub struct Car {
     pub x: i32,
     pub y: i32,
@@ -104,12 +104,16 @@ impl Car {
         Rect::new(self.x, self.y, 50, 50)
     }
 
-    pub fn update_position(&mut self) {
+    pub fn update_position(&mut self, lights: &mut [Light], cars: &[Car]) {
         let speed = 2;
         let (x, y, _, _) = get_road_positions();
 
         match self.direction {
             Direction::East => {
+                if (!lights[1].status && self.x >= x - 100) || !self.is_can_move(cars) {
+                    return;
+                }
+
                 self.x += speed;
 
                 if self.route == Route::Left && self.x >= x {
@@ -151,5 +155,23 @@ impl Car {
                 }
             }
         }
+    }
+
+    fn is_can_move(&self, cars: &[Car]) -> bool {
+        let safety_distance = 70;
+
+        for car in cars.iter() {
+            match self.direction {
+                Direction::East if car.direction == Direction::East && self.x == car.x => {
+                    if (car.x - self.x).abs() < safety_distance {
+                        return false;
+                    }
+                }
+
+                _ => {}
+            }
+        }
+
+        true
     }
 }
