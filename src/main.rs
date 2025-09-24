@@ -5,9 +5,12 @@ use std::time::Duration;
 
 mod roads;
 mod car;
+mod traffic_light;
 
 use crate::car::*;
 use crate::roads::*;
+use crate::traffic_light::*;
+
 const WIDTH: i32 = 900;
 const HEIGHT: i32 = 700;
 
@@ -23,6 +26,7 @@ pub fn main() {
 
     let mut canvas = window.into_canvas().build().unwrap();
     let mut cars: Vec<Car> = Vec::new();
+    let mut traffic_light_system = TrafficLightSystem::new();
 
     canvas.set_draw_color(Color::BLACK);
     canvas.clear();
@@ -72,20 +76,43 @@ pub fn main() {
             }
         }
 
+        // Update traffic lights
+        traffic_light_system.update();
+        
+        // Dynamic congestion control
+        let lane_capacity = 10;
+        traffic_light_system.adjust_for_congestion(&cars, lane_capacity);
+
         canvas.set_draw_color(Color::BLACK);
         canvas.clear();
 
         draw_roads(&mut canvas);
+        traffic_light_system.draw(&mut canvas);
 
-        // Update car positions (no safety checks needed here anymore)
+        // First, collect all car positions for collision detection
+        let car_positions: Vec<(i32, i32, Direction)> = cars
+            .iter()
+            .map(|car| car.get_position_data())
+            .collect();
+
+        // Then update each car's position using the collected positions
         for car in cars.iter_mut() {
-            car.update_position();
+            car.update_position(&traffic_light_system, &car_positions);
         }
+
+        // Remove cars that have left the screen
+        cars.retain(|car| car.state);
 
         // Draw all cars
         for car in cars.iter() {
             canvas.set_draw_color(car.color);
             canvas.fill_rect(car.rect()).unwrap();
+            
+            // Draw a black border around stopped cars
+            if car.stopped {
+                canvas.set_draw_color(Color::BLACK);
+                canvas.draw_rect(car.rect()).unwrap();
+            }
         }
 
         canvas.present();
