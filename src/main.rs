@@ -119,7 +119,7 @@ pub fn main() {
                 l.draw_traffic_light(&capacity);
             }
             
-            a += 2;
+            a += 1;
         }
         
         for l in lights.iter_mut() {
