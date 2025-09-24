@@ -136,7 +136,7 @@ impl Car {
                     self.state = false;
                 }
 
-                if ((!lights[1].status && self.x == x + 50) || !self.is_can_move(cars))
+                if ((!lights[3].status && self.x == x + 50) || !self.is_can_move(cars))
                     && self.state
                 {
                     return;
@@ -156,7 +156,7 @@ impl Car {
                     self.state = false;
                 }
 
-                if ((!lights[1].status && self.y == y - 100) || !self.is_can_move(cars))
+                if ((!lights[0].status && self.y == y - 100) || !self.is_can_move(cars))
                     && self.state
                 {
                     return;
@@ -176,7 +176,7 @@ impl Car {
                     self.state = false;
                 }
 
-                if ((!lights[1].status && self.y == y + 50) || !self.is_can_move(cars))
+                if ((!lights[2].status && self.y == y + 50) || !self.is_can_move(cars))
                     && self.state
                 {
                     return;
