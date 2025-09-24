@@ -57,17 +57,20 @@ impl Car {
         })
     }
 
-    pub fn new_with_rand_dir(existing_cars: &[Car]) -> Option<Car> {
+    pub fn new_with_rand_dir(existing_cars: &[Car], capacity: &mut HashMap<&str, u32>) -> Option<Car> {
         let (x, y, width, height) = get_road_positions();
 
-        let (spawn_x, spawn_y, direction) = match rand::thread_rng().gen_range(1..=4) {
-            1 => (0, y, Direction::East),
-            2 => (x - 50, 0, Direction::North),
-            3 => (x, height - 50, Direction::South),
-            _ => (width - 50, y - 50, Direction::West),
+        let (spawn_x, spawn_y, direction, str_dir) = match rand::thread_rng().gen_range(1..=4) {
+            1 => (0, y, Direction::East, "East"),
+            2 => (x - 50, 0, Direction::North, "North"),
+            3 => (x, height - 50, Direction::South, "South"),
+            _ => (width - 50, y - 50, Direction::West, "West"),
         };
 
         if Car::is_position_safe(spawn_x, spawn_y, direction, existing_cars) {
+            if let Some(value) = capacity.get_mut(str_dir) {
+                *value += 1;
+            } 
             return Car::new(spawn_x, spawn_y, direction, existing_cars);
         }
 

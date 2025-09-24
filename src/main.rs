@@ -91,7 +91,7 @@ pub fn main() {
                        
                         }
                         Keycode::R => {
-                            if let Some(new_car) = Car::new_with_rand_dir(&cars) {
+                            if let Some(new_car) = Car::new_with_rand_dir(&cars, &mut capacity) {
                                 cars.push(new_car);
                             }
                         }
